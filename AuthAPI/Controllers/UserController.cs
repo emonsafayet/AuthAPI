@@ -1,4 +1,5 @@
 ﻿using AuthAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ using System.Text;
 
 namespace AuthAPI.Controllers
 {
+    
     [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -25,7 +27,7 @@ namespace AuthAPI.Controllers
             tokenGenerator = _refreshToken;
         }
 
-        //[NonAction]
+        [NonAction]
         public TokenResponse Authenticate(string username, Claim[] claims)
         {
             TokenResponse tokenResponse = new TokenResponse();
@@ -61,6 +63,9 @@ namespace AuthAPI.Controllers
                         new Claim[]
                         {
                             new Claim(ClaimTypes.Name, _user.UserId),
+                            new Claim(ClaimTypes.Role, _user.Role),
+                          
+
                         }
                 ),
                 Expires = DateTime.Now.AddMinutes(20),

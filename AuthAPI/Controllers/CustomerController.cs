@@ -9,7 +9,9 @@ using System.Linq;
 
 namespace AuthAPI.Controllers
 {
+
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "admin")]
     [Route("[controller]")] 
     [ApiController]
     public class CustomerController : ControllerBase

@@ -29,15 +29,16 @@ namespace AuthAPI
                 }
                 else
                 {
-                    TblRefreshtoken tblRefreshtoken = new TblRefreshtoken()
+                    var entity = new TblRefreshtoken()
                     {
                         UserId = username,
                         TokenId = new Random().Next().ToString(),
                         RefreshToken = RefreshToken,
                         IsActive = true
-                    };
-                }
-
+                    };  
+                    this.context.TblRefreshtokens.Add(entity);
+                    this.context.SaveChanges();
+                } 
                 return RefreshToken;
             }
         }

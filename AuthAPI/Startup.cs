@@ -24,9 +24,9 @@ namespace AuthAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
+
             services.AddDbContext<AuthDBContext>(op => op.UseSqlServer(Configuration.GetConnectionString("constring")));
-            
+
             var _dbcontext = services.BuildServiceProvider().GetService<AuthDBContext>();
             services.AddSingleton<IRefreshTokenGenerator>(provider => new RefreshTokenGenerator(_dbcontext));
 
@@ -56,6 +56,16 @@ namespace AuthAPI
 
             });
 
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("api", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Description = "Customer API with crud operation",
+                    Title = "Customer",
+                    Version = "v1"
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,10 +79,18 @@ namespace AuthAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
-           // app.UseSwagger();
-            app.UseAuthorization();
-          //  app.UseSwaggerUI(options => options.SwaggerEndpoint("api/swagger.json", "Customer"));
+
+            app.UseSwagger();
+            app.UseCors(builder=>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();           
+            });
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("api/swagger.json", "Customer"));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
