@@ -21,7 +21,7 @@ namespace AuthAPI
                 randomnumbergenerator.GetBytes(randomnumber);
                 string RefreshToken = Convert.ToBase64String(randomnumber);
 
-                var _user = context.TblRefreshtokens.FirstOrDefault(o => o.UserId == username);
+                var _user = context.TblRefreshtoken.FirstOrDefault(o => o.UserId == username);
                 if (_user != null)
                 {
                     _user.RefreshToken = RefreshToken;
@@ -36,7 +36,7 @@ namespace AuthAPI
                         RefreshToken = RefreshToken,
                         IsActive = true
                     };  
-                    this.context.TblRefreshtokens.Add(entity);
+                    this.context.TblRefreshtoken.Add(entity);
                     this.context.SaveChanges();
                 } 
                 return RefreshToken;

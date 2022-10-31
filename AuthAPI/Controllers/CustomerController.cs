@@ -25,7 +25,7 @@ namespace AuthAPI.Controllers
         [HttpGet]
         public IEnumerable<TblCustomer> Get()
         {
-            return _dbContext.TblCustomers.ToList();
+            return _dbContext.TblCustomer.ToList();
         }
 
         // GET api/<CustomerController>/5

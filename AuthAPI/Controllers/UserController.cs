@@ -50,7 +50,7 @@ namespace AuthAPI.Controllers
         public IActionResult Authenticate([FromBody] userced user)
         {
             TokenResponse tokenresponse = new TokenResponse();
-            var _user = _dbContext.TblUsers.FirstOrDefault(o => o.UserId == user.username &&
+            var _user = _dbContext.TblUser.FirstOrDefault(o => o.UserId == user.username &&
                                                                     o.Password == user.password && o.IsActive == true);
             if (_user == null)
                 return Unauthorized();
@@ -104,7 +104,7 @@ namespace AuthAPI.Controllers
                 return Unauthorized();
             }
             var username = principle.Identity.Name;
-            var _reftable = _dbContext.TblRefreshtokens.FirstOrDefault(o => o.UserId == username && o.RefreshToken == token.RefreshToken);
+            var _reftable = _dbContext.TblRefreshtoken.FirstOrDefault(o => o.UserId == username && o.RefreshToken == token.RefreshToken);
             if (_reftable == null)
             {
                 return Unauthorized();

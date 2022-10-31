@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System;
+using Microsoft.Extensions.Primitives;
 
 namespace AuthAPI
 {
@@ -51,7 +53,9 @@ namespace AuthAPI
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authkey)),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
 
             });
@@ -64,6 +68,15 @@ namespace AuthAPI
                     Title = "Customer",
                     Version = "v1"
                 });
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                    .WithOrigins("http://localhost:4200", "http://localhost:82")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
             });
 
         }
@@ -83,6 +96,18 @@ namespace AuthAPI
             app.UseAuthorization();
 
             app.UseSwagger();
+
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    // Add CORS header to allow error message to be visible to Angular
+                    if (context.Request.Headers.TryGetValue("Origin", out StringValues origin))
+                    {
+                        context.Response.Headers.Add("Access-Control-Allow-Origin", origin.ToString());
+                    }
+                });
+            });
             app.UseCors(builder=>
             {
                 builder
