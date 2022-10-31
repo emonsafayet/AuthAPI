@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq; 
 using AuthAPI.Models;
-using Microsoft.AspNetCore.Authorization;
-using AuthAPI.Models;
+using Microsoft.AspNetCore.Authorization; 
 
 namespace CustomerAPI.Controllers
 {
