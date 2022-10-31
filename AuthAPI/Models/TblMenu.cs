@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CustomerAPI.Models
+namespace AuthAPI.Models
 {
     public partial class TblMenu
     {

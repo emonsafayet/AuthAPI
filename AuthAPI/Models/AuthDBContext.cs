@@ -1,5 +1,5 @@
 ﻿using System;
-using CustomerAPI.Models;
+using AuthAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
