@@ -12,7 +12,7 @@ using System.Text;
 
 namespace AuthAPI.Controllers
 {
-    
+
     [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -43,7 +43,7 @@ namespace AuthAPI.Controllers
 
             return tokenResponse;
         }
-       
+
 
         [Route("Authenticate")]
         [HttpPost]
@@ -64,7 +64,7 @@ namespace AuthAPI.Controllers
                         {
                             new Claim(ClaimTypes.Name, _user.UserId),
                             new Claim(ClaimTypes.Role, _user.Role),
-                          
+
 
                         }
                 ),
@@ -112,5 +112,76 @@ namespace AuthAPI.Controllers
             TokenResponse _resutl = Authenticate(username, principle.Claims.ToArray());
             return Ok(_resutl);
         }
+        [Route("GetMenubyRole/{role}")]
+        [HttpGet]
+        public IActionResult GetMenubyRole(string role)
+        {
+            var _result = (from q1 in _dbContext.TblPermission.Where(item => item.RoleId == role)
+                           join q2 in _dbContext.TblMenu
+                           on q1.MenuId equals q2.Id
+                           select new { q1.MenuId, q2.Name, q2.LinkName }).ToList();
+            // var _result = _dbContext.TblPermission.Where(o => o.RoleId == role).ToList();
+
+            return Ok(_result);
+        }
+
+        [Route("HaveAccess")]
+        [HttpGet]
+        public IActionResult HaveAccess(string role, string menu)
+        {
+            APIResponse result = new APIResponse();
+            //var username = principal.Identity.Name;
+            var _result = _dbContext.TblPermission.Where(o => o.RoleId == role && o.MenuId == menu).FirstOrDefault();
+            if (_result != null)
+            {
+                result.result = "pass";
+            }
+            return Ok(result);
+        }
+
+        [Route("GetAllRole")]
+        [HttpGet]
+        public IActionResult GetAllRole()
+        {
+            var _result = _dbContext.TblRole.ToList();
+            // var _result = _dbContext.TblPermission.Where(o => o.RoleId == role).ToList();
+
+            return Ok(_result);
+        }
+
+        [HttpPost("Register")]
+        public APIResponse Register([FromBody] TblUser value)
+        {
+            string result = string.Empty;
+            try
+            {
+                var _emp = _dbContext.TblUser.FirstOrDefault(o => o.UserId == value.UserId);
+                if (_emp != null)
+                {
+                    result = string.Empty;
+                }
+                else
+                {
+                    TblUser tblUser = new TblUser()
+                    {
+                        Name = value.Name,
+                        Email = value.Email,
+                        UserId = value.UserId,
+                        Role = string.Empty,
+                        Password = value.Password,
+                        IsActive = false
+                    };
+                    _dbContext.TblUser.Add(tblUser);
+                    _dbContext.SaveChanges();
+                    result = "pass";
+                }
+            }
+            catch (Exception ex)
+            {
+                result = string.Empty;
+            }
+            return new APIResponse { keycode = string.Empty, result = result };
+        }
+
     }
 }
