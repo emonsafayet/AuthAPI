@@ -4,8 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AuthAPI.Models;
-using AuthAPI.Models;
+using AuthAPI.Models; 
 
 namespace CustomerAPI.Controllers
 {
